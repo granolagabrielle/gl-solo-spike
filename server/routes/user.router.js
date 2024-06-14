@@ -1,7 +1,5 @@
 const express = require('express');
-const {
-  rejectUnauthenticated,
-} = require('../modules/authentication-middleware');
+const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
 const userStrategy = require('../strategies/user.strategy');
@@ -21,10 +19,10 @@ router.post('/register', (req, res, next) => {
   const username = req.body.username;
   const password = encryptLib.encryptPassword(req.body.password);
 
-  const queryText = `INSERT INTO "user" (username, password)
-    VALUES ($1, $2) RETURNING id`;
+  const queryText = `INSERT INTO "user" (username, password, admin)
+    VALUES ($1, $2, $3) RETURNING id`;
   pool
-    .query(queryText, [username, password])
+    .query(queryText, [username, password, 'FALSE'])
     .then(() => res.sendStatus(201))
     .catch((err) => {
       console.log('User registration failed: ', err);
@@ -44,7 +42,9 @@ router.post('/login', userStrategy.authenticate('local'), (req, res) => {
 router.post('/logout', (req, res, next) => {
   // Use passport's built-in method to log out the user
   req.logout((err) => {
-    if (err) { return next(err); }
+    if (err) {
+      return next(err);
+    }
     res.sendStatus(200);
   });
 });
