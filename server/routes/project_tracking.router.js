@@ -58,6 +58,34 @@ router.post('/', (req, res) => {
 });
 // WORKS IN POSTMAN
 
+// put to update project details
+router.put('/:id', (req, res) => {
+  console.log('in project put, check req.body', req.body);
+  const queryText = `
+    UPDATE "project_tracking"
+    SET "pattern_id" = $1, "date_started" = $2, "notes" = $3, "progress" = $4, "yarn_id" = $5, "project_image" = $6
+    WHERE "project_id"=$7 AND "user_id"=$8;`;
+  const values = [
+    req.body.pattern_id,
+    req.body.date_started,
+    req.body.notes,
+    req.body.progress,
+    req.body.yarn_id,
+    req.body.project_image,
+    req.params.id,
+    req.user.id,
+  ];
+  pool
+    .query(queryText, values)
+    .then((result) => {
+      res.sendStatus(201);
+    })
+    .catch((error) => {
+      console.log('error updating project', error);
+      res.sendStatus(500);
+    });
+});
+
 // delete project from inventory
 router.delete('/:id', (req, res) => {
   const queryText = `
