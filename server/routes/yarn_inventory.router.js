@@ -18,10 +18,10 @@ router.get('/', (req, res) => {
 // get yarn details for specific user -- pass in id of yarn that was clicked on
 router.get('/:id', (req, res) => {
   const queryText = `
-  SELECT * FROM "yarn_inventory" WHERE id=$1;
+  SELECT * FROM "yarn_inventory" WHERE "yarn_id"=$1 AND "user_id"=$2;
   `;
   pool
-    .query(queryText, [req.params.id])
+    .query(queryText, [req.params.id, req.user.id])
     .then((result) => {
       res.send(result.rows);
     })
@@ -30,6 +30,7 @@ router.get('/:id', (req, res) => {
       res.sendStatus(500);
     });
 });
+// WORKS IN POSTMAN
 
 // post new yarn to inventory -- TO DO: ADD AUTHENTICATION
 router.post('/', (req, res) => {

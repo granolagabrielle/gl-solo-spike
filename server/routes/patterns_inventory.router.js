@@ -35,11 +35,10 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   console.log('in pattern post, check req.body', req.body);
   const queryText = `INSERT INTO "patterns_inventory" 
-    ("pattern_id", "title", "designer_name", "pattern_type", "difficulty_level", "yarn_weight_needed", "user_id", "pattern_image") 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
+    ("title", "designer_name", "pattern_type", "difficulty_level", "yarn_weight_needed", "user_id", "pattern_image") 
+    VALUES ($1, $2, $3, $4, $5, $6, $7);`;
   pool
     .query(queryText, [
-      req.body.pattern_id,
       req.body.title,
       req.body.designer_name,
       req.body.pattern_type,
@@ -48,12 +47,15 @@ router.post('/', (req, res) => {
       req.user.id,
       req.body.pattern_image,
     ])
-    .then(() => res.sendStatus(201))
+    .then((result) => {
+      res.send(result.rows[0]);
+    })
     .catch((error) => {
       console.log(error);
       res.sendStatus(500);
     });
 });
+// WORKS IN POSTMAN
 
 // delete pattern from inventory
 
