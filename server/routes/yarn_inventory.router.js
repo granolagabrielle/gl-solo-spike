@@ -78,6 +78,37 @@ router.delete('/:id', (req, res) => {
 });
 // WORKS IN POSTMAN
 
+// put to update yarn details
+router.put('/:id', (req, res) => {
+  console.log('in yarn put, check req.body', req.body);
+  const queryText = `
+    UPDATE "yarn_inventory"
+    SET "brand" = $1, "skeins" = $2, "fiber_content" = $3, "weight" = $4, "grams_in_skein" = $5, "dye_lot" = $6, "yarn_image" = $7
+    WHERE "yarn_id"=$8 AND "user_id"=$9;`;
+  const values = [
+    req.body.brand,
+    req.body.skeins,
+    req.body.fiber_content,
+    req.body.weight,
+    req.body.grams_in_skein,
+    req.body.dye_lot,
+    req.body.yarn_image,
+    req.params.id,
+    req.user.id,
+  ];
+  pool
+    .query(queryText, values)
+    .then((result) => {
+      res.sendStatus(201);
+    })
+    .catch((error) => {
+      console.log('error updating project', error);
+      res.sendStatus(500);
+    });
+});
+
+// get for 6 dropdown tables
+
 // STRETCH
 
 // PROJECT INVENTORY
