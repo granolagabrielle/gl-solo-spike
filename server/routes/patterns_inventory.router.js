@@ -17,19 +17,20 @@ router.get('/', (req, res) => {
 
 // get pattern details for specific user -- pass in id of pattern that was clicked on
 router.get('/:id', (req, res) => {
-  const queryText = `
-    SELECT * FROM "patterns_inventory" WHERE id=$1;
+    const queryText = `
+    SELECT * FROM "patterns_inventory" WHERE "pattern_id"=$1 AND "user_id"=$2;
     `;
-  pool
-    .query(queryText, [req.params.id])
-    .then((result) => {
-      res.send(result.rows);
-    })
-    .catch((err) => {
-      console.log('Error in GET /api/patterns/:id', err);
-      res.sendStatus(500);
-    });
-});
+    pool
+      .query(queryText, [req.params.id, req.user.id])
+      .then((result) => {
+        res.send(result.rows);
+      })
+      .catch((err) => {
+        console.log('Error in GET /api/patterns/:id', err);
+        res.sendStatus(500);
+      });
+  });
+  // WORKS IN POSTMAN
 
 // post new pattern to inventory -- TO DO: ADD AUTHENTICATION
 router.post('/', (req, res) => {
