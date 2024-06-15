@@ -58,6 +58,35 @@ router.post('/', (req, res) => {
 });
 // WORKS IN POSTMAN
 
+// put to update pattern details
+router.put('/:id', (req, res) => {
+  console.log('in pattern put, check req.body', req.body);
+  const queryText = `
+      UPDATE "patterns_inventory"
+      SET "title" = $1, "designer_name" = $2, "pattern_type" = $3, "difficulty_level" = $4, "yarn_weight_needed" = $5, "pattern_image" = $6
+      WHERE "pattern_id"=$7 AND "user_id"=$8;`;
+  const values = [
+    req.body.title,
+    req.body.designer_name,
+    req.body.pattern_type,
+    req.body.difficulty_level,
+    req.body.yarn_weight_needed,
+    req.body.pattern_image,
+    req.params.id,
+    req.user.id,
+  ];
+  pool
+    .query(queryText, values)
+    .then((result) => {
+      res.sendStatus(201);
+    })
+    .catch((error) => {
+      console.log('error updating project', error);
+      res.sendStatus(500);
+    });
+});
+// WORKS IN POSTMAN
+
 // delete pattern from inventory
 router.delete('/:id', (req, res) => {
   const queryText = `

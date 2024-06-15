@@ -106,6 +106,7 @@ router.put('/:id', (req, res) => {
       res.sendStatus(500);
     });
 });
+// WORKS IN POSTMAN
 
 // get for 6 dropdown tables
 
