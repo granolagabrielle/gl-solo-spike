@@ -11,7 +11,7 @@ const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
 const yarnRouter = require('./routes/yarn_inventory.router');
 const patternsRouter = require('./routes/patterns_inventory.router');
-// const projectRouter = require('./routes/project_tracking.router');
+const projectRouter = require('./routes/project_tracking.router');
 
 // Express Middleware
 app.use(express.json());
@@ -28,6 +28,7 @@ app.use(passport.session());
 app.use('/api/user', userRouter);
 app.use('/api/yarn', yarnRouter);
 app.use('/api/patterns', patternsRouter);
+app.use('/api/projects', projectRouter);
 
 // Listen Server & Port
 app.listen(PORT, () => {
