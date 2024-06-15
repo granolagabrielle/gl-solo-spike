@@ -60,6 +60,23 @@ router.post('/', (req, res) => {
 // WORKS IN POSTMAN
 
 // delete yarn from inventory
+router.delete('/:id', (req, res) => {
+  const queryText = `
+  DELETE FROM "yarn_inventory" 
+  WHERE "yarn_id"=$1 
+  AND "user_id"=$2;
+  `;
+  pool
+    .query(queryText, [req.params.id, req.user.id]) // $1, $2
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch((error) => {
+      console.log('error deleting item', error);
+      res.sendStatus(500);
+    });
+});
+// WORKS IN POSTMAN
 
 // STRETCH
 
